@@ -1,309 +1,337 @@
 import { useState, useEffect } from "react";
-import Icon from "@/components/ui/icon";
 
-const SLIDES = [
-  { id: 0, label: "Титульный" },
-  { id: 1, label: "История" },
-  { id: 2, label: "Возможности" },
-  { id: 3, label: "Статистика" },
-  { id: 4, label: "Влияние" },
-  { id: 5, label: "Будущее" },
-];
-
-const durovImg = "https://cdn.poehali.dev/projects/61940178-bf70-4e64-bb62-b34ff76884d1/files/dfc54262-9dd8-410f-94b3-966207e5c933.jpg";
+const SLIDES = ["Титульный", "История", "Возможности", "Аудитория", "Влияние", "Выводы"];
 
 export default function Presentation() {
-  const [current, setCurrent] = useState(0);
-
-  const goTo = (idx: number) => {
-    if (idx < 0 || idx >= SLIDES.length) return;
-    setCurrent(idx);
-  };
+  const [cur, setCur] = useState(0);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") goTo(current + 1);
-      if (e.key === "ArrowLeft") goTo(current - 1);
+      if (e.key === "ArrowRight") setCur(c => Math.min(c + 1, SLIDES.length - 1));
+      if (e.key === "ArrowLeft")  setCur(c => Math.max(c - 1, 0));
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [current]);
+  }, []);
 
   return (
-    <div style={{ width:"100vw", height:"100vh", overflow:"hidden", background:"#f0f2f5", fontFamily:"'Montserrat', sans-serif", position:"relative" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
-        * { box-sizing: border-box; margin:0; padding:0; }
-        .slide { position:absolute; inset:0; display:none; }
-        .slide.active { display:flex; flex-direction:column; }
-        .feat-card { background:white; border-radius:12px; padding:1rem 1.1rem; box-shadow:0 2px 10px rgba(0,0,0,.06); }
-        .stat-box { background:white; border-radius:12px; padding:1rem 1.3rem; box-shadow:0 2px 10px rgba(0,0,0,.07); border-left:4px solid #2AABEE; }
-        .tl-dot { width:36px; height:36px; border-radius:50%; background:#2AABEE; display:flex; align-items:center; justify-content:center; color:white; font-size:.68rem; font-weight:700; flex-shrink:0; }
-        .tl-line { position:absolute; left:17px; top:36px; bottom:0; width:2px; background:#dde8f5; }
-        .tag-blue { display:inline-block; background:#e8f4fd; color:#2AABEE; border-radius:6px; padding:.25rem .7rem; font-size:.7rem; font-weight:600; }
-        .bar-bg { background:#e8ecf0; border-radius:100px; height:9px; overflow:hidden; }
-        .bar-fill { height:100%; border-radius:100px; background:#2AABEE; }
-        .nbtn { width:34px; height:34px; border-radius:50%; background:white; border:1px solid #dde3ea; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#444; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-        .nbtn:hover { background:#2AABEE; color:white; border-color:#2AABEE; }
-        .nbtn:disabled { opacity:.3; cursor:not-allowed; }
-        .nbtn:disabled:hover { background:white; color:#444; border-color:#dde3ea; }
-        .ndot { width:8px; height:8px; border-radius:50%; background:rgba(0,0,0,.18); cursor:pointer; border:none; }
-        .ndot.on { background:#2AABEE; width:22px; border-radius:4px; }
-        .nav-wrap { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:.65rem; z-index:200; background:rgba(255,255,255,.9); border-radius:100px; padding:.45rem .9rem; box-shadow:0 2px 12px rgba(0,0,0,.1); }
-        .slide-num { position:fixed; top:1.1rem; right:1.4rem; font-size:.65rem; font-weight:700; color:#8a9baa; z-index:200; }
-        .chart-col { display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; }
-        .chart-bar { width:100%; border-radius:6px 6px 0 0; background:#2AABEE; }
-      `}</style>
+    <div style={{ width:"100vw", height:"100vh", background:"#fff", fontFamily:"Calibri, Arial, sans-serif", display:"flex", flexDirection:"column", overflow:"hidden" }}>
 
-      {/* ── СЛАЙД 0: ТИТУЛЬНЫЙ ── */}
-      <div className={`slide ${current === 0 ? "active" : ""}`} style={{ flexDirection:"row", background:"white" }}>
-        <div style={{ width:"42%", background:"#2AABEE", display:"flex", flexDirection:"column", justifyContent:"center", padding:"3.5rem", position:"relative", overflow:"hidden" }}>
-          <div style={{ position:"absolute", top:"-60px", right:"-60px", width:"220px", height:"220px", borderRadius:"50%", background:"rgba(255,255,255,.08)" }} />
-          <div style={{ position:"absolute", bottom:"-40px", left:"-40px", width:"160px", height:"160px", borderRadius:"50%", background:"rgba(255,255,255,.06)" }} />
-          <div style={{ fontSize:"5rem", marginBottom:"1.5rem", lineHeight:1 }}>✈️</div>
-          <div style={{ fontSize:"clamp(2.2rem,4vw,3.4rem)", fontWeight:800, color:"white", lineHeight:1.15, marginBottom:"1rem" }}>Telegram</div>
-          <div style={{ width:"50px", height:"4px", background:"white", borderRadius:"2px", marginBottom:"1rem", opacity:.7 }} />
-          <div style={{ fontSize:"1rem", color:"rgba(255,255,255,.85)", fontWeight:400, lineHeight:1.6 }}>Платформа нового поколения</div>
-        </div>
-        <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"3.5rem" }}>
-          <div style={{ marginBottom:"1.5rem" }}><span className="tag-blue">ИССЛЕДОВАНИЕ · 2025</span></div>
-          <h1 style={{ fontSize:"clamp(1.4rem,2.8vw,2.1rem)", fontWeight:800, color:"#1a2535", lineHeight:1.35, marginBottom:"1.5rem" }}>
-            Как мессенджер изменил правила коммуникации для 900 миллионов людей
-          </h1>
-          <p style={{ fontSize:".95rem", color:"#667080", lineHeight:1.75, marginBottom:"2rem", maxWidth:"420px" }}>
-            История, технологии, влияние на общество и будущее одной из самых быстрорастущих платформ в мире.
-          </p>
-          <div style={{ display:"flex", gap:"2rem" }}>
-            {[{ n:"900M+", l:"пользователей" },{ n:"2013", l:"год запуска" },{ n:"#1", l:"по приватности" }].map(s=>(
-              <div key={s.l}>
-                <div style={{ fontSize:"1.6rem", fontWeight:800, color:"#2AABEE" }}>{s.n}</div>
-                <div style={{ fontSize:".7rem", color:"#8a9baa", fontWeight:500, marginTop:".1rem" }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
+      {/* Верхняя полоска с навигацией — как вкладки */}
+      <div style={{ background:"#1e73be", padding:"0 1.5rem", display:"flex", alignItems:"center", gap:".25rem", flexShrink:0 }}>
+        {SLIDES.map((s, i) => (
+          <button key={s} onClick={() => setCur(i)} style={{
+            padding:".55rem 1.1rem", border:"none", cursor:"pointer", fontSize:".8rem", fontFamily:"Calibri, Arial, sans-serif",
+            background: cur === i ? "#fff" : "transparent",
+            color: cur === i ? "#1e73be" : "rgba(255,255,255,.8)",
+            fontWeight: cur === i ? 700 : 400,
+            borderRadius:"4px 4px 0 0", marginTop:"4px",
+          }}>{s}</button>
+        ))}
+        <div style={{ marginLeft:"auto", color:"rgba(255,255,255,.6)", fontSize:".75rem", paddingBottom:"4px" }}>
+          {cur + 1} / {SLIDES.length}
         </div>
       </div>
 
-      {/* ── СЛАЙД 1: ИСТОРИЯ ── */}
-      <div className={`slide ${current === 1 ? "active" : ""}`} style={{ background:"#f7f9fb", padding:"2.5rem 3.5rem", overflow:"auto" }}>
-        <SlideHeader num="01" title="История создания" accent="Telegram" />
-        <div style={{ display:"grid", gridTemplateColumns:"1.1fr 1fr", gap:"2.5rem", marginTop:"1.5rem", alignItems:"start" }}>
-          <div style={{ position:"relative" }}>
-            <div className="tl-line" />
-            {[
-              { year:"2006", title:"ВКонтакте", desc:"Павел Дуров основывает крупнейшую соцсеть России — первый опыт создания массовой платформы" },
-              { year:"2013", title:"Запуск Telegram", desc:"14 августа — первый день: 100 000 загрузок. Цель: безопасный мессенджер без слежки" },
-              { year:"2014", title:"Эмиграция Дурова", desc:"Покидает Россию после давления ФСБ. Telegram становится независимым от любого государства" },
-              { year:"2018", title:"Блокировка в РФ", desc:"Роскомнадзор пытается заблокировать — безуспешно. Аудитория продолжает расти" },
-              { year:"2020", title:"400 млн пользователей", desc:"Пандемия COVID-19 даёт взрывной рост: главный канал новостей и общения" },
-              { year:"2024", title:"900 млн + TON", desc:"Мини-приложения и блокчейн-экосистема. Telegram становится супер-платформой" },
-            ].map(item=>(
-              <div key={item.year} style={{ display:"flex", gap:"1rem", marginBottom:"1rem", position:"relative" }}>
-                <div className="tl-dot">{item.year.slice(2)}'</div>
-                <div style={{ background:"white", borderRadius:"10px", padding:".75rem 1rem", flex:1, boxShadow:"0 2px 8px rgba(0,0,0,.06)" }}>
-                  <div style={{ display:"flex", gap:".6rem", alignItems:"center", marginBottom:".2rem" }}>
-                    <span style={{ fontSize:".62rem", color:"#2AABEE", fontWeight:700 }}>{item.year}</span>
-                    <span style={{ fontWeight:700, color:"#1a2535", fontSize:".88rem" }}>{item.title}</span>
-                  </div>
-                  <p style={{ fontSize:".77rem", color:"#667080", lineHeight:1.55 }}>{item.desc}</p>
+      {/* Контент слайдов */}
+      <div style={{ flex:1, overflow:"auto" }}>
+
+        {/* СЛАЙД 0 — ТИТУЛЬНЫЙ */}
+        {cur === 0 && (
+          <div style={{ height:"100%", background:"#1e73be", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"3rem", textAlign:"center" }}>
+            <div style={{ background:"white", borderRadius:"4px", padding:"3rem 4rem", maxWidth:"680px", width:"100%", boxShadow:"0 4px 24px rgba(0,0,0,.18)" }}>
+              <div style={{ fontSize:"4rem", marginBottom:"1rem" }}>✈️</div>
+              <h1 style={{ fontSize:"2.6rem", fontWeight:700, color:"#1e3a5f", marginBottom:".75rem", lineHeight:1.2 }}>
+                Telegram
+              </h1>
+              <div style={{ height:"3px", background:"#1e73be", width:"80px", margin:"0 auto 1.25rem" }} />
+              <p style={{ fontSize:"1.1rem", color:"#444", marginBottom:"2rem", lineHeight:1.6 }}>
+                Роль мессенджера в современном обществе
+              </p>
+              <div style={{ display:"flex", gap:"2rem", justifyContent:"center", borderTop:"1px solid #e0e0e0", paddingTop:"1.5rem" }}>
+                <div>
+                  <div style={{ fontSize:"1.8rem", fontWeight:700, color:"#1e73be" }}>900 млн</div>
+                  <div style={{ fontSize:".8rem", color:"#888" }}>пользователей</div>
+                </div>
+                <div>
+                  <div style={{ fontSize:"1.8rem", fontWeight:700, color:"#1e73be" }}>2013</div>
+                  <div style={{ fontSize:".8rem", color:"#888" }}>год создания</div>
+                </div>
+                <div>
+                  <div style={{ fontSize:"1.8rem", fontWeight:700, color:"#1e73be" }}>12 лет</div>
+                  <div style={{ fontSize:".8rem", color:"#888" }}>на рынке</div>
                 </div>
               </div>
-            ))}
+            </div>
+            <p style={{ color:"rgba(255,255,255,.6)", fontSize:".75rem", marginTop:"1.5rem" }}>← → для навигации</p>
           </div>
-          <div>
-            <img src={durovImg} alt="" style={{ width:"100%", aspectRatio:"1/1", objectFit:"cover", borderRadius:"14px", marginBottom:"1rem", boxShadow:"0 4px 20px rgba(0,0,0,.1)" }} />
-            <div style={{ background:"white", borderRadius:"12px", padding:"1.1rem", boxShadow:"0 2px 10px rgba(0,0,0,.07)", borderLeft:"4px solid #2AABEE" }}>
-              <div style={{ fontSize:".62rem", fontWeight:700, color:"#2AABEE", marginBottom:".4rem" }}>ПАВЕЛ ДУРОВ, ОСНОВАТЕЛЬ</div>
-              <p style={{ fontStyle:"italic", color:"#445060", fontSize:".85rem", lineHeight:1.7 }}>
-                «Конфиденциальность — не роскошь, а базовое право каждого человека.»
+        )}
+
+        {/* СЛАЙД 1 — ИСТОРИЯ */}
+        {cur === 1 && (
+          <div style={{ padding:"2rem 3rem", maxWidth:"960px", margin:"0 auto" }}>
+            <h2 style={{ fontSize:"1.7rem", fontWeight:700, color:"#1e3a5f", borderBottom:"2px solid #1e73be", paddingBottom:".5rem", marginBottom:"1.5rem" }}>
+              История создания Telegram
+            </h2>
+
+            <p style={{ fontSize:".95rem", color:"#333", lineHeight:1.75, marginBottom:"1.5rem" }}>
+              Telegram был основан братьями <strong>Павлом и Николаем Дуровыми</strong> в 2013 году. До этого Павел создал ВКонтакте — крупнейшую социальную сеть России. В 2014 году, после давления со стороны российских властей, он покинул страну и сосредоточился на развитии Telegram как независимой платформы.
+            </p>
+
+            {/* Таблица-хронология */}
+            <table style={{ width:"100%", borderCollapse:"collapse", fontSize:".88rem", marginBottom:"1.5rem" }}>
+              <thead>
+                <tr style={{ background:"#1e73be", color:"white" }}>
+                  <th style={{ padding:".6rem 1rem", textAlign:"left", width:"100px" }}>Год</th>
+                  <th style={{ padding:".6rem 1rem", textAlign:"left", width:"200px" }}>Событие</th>
+                  <th style={{ padding:".6rem 1rem", textAlign:"left" }}>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["2006", "Создание ВКонтакте",       "Дуров запускает крупнейшую соцсеть России, набирает опыт в разработке платформ"],
+                  ["2013", "Запуск Telegram",           "14 августа выходит первая версия. За первые сутки — 100 000 скачиваний"],
+                  ["2014", "Эмиграция из России",       "Дуров уходит из ВКонтакте после конфликта с ФСБ, Telegram становится независимым"],
+                  ["2018", "Блокировка в России",       "Роскомнадзор пытается заблокировать Telegram — безуспешно, аудитория растёт"],
+                  ["2020", "400 млн пользователей",     "Пандемия COVID-19 даёт взрывной рост — Telegram стал главным каналом новостей"],
+                  ["2024", "900 млн + экосистема TON",  "Запуск мини-приложений и блокчейна, Telegram превращается в супер-платформу"],
+                ].map(([year, event, desc], i) => (
+                  <tr key={year} style={{ background: i % 2 === 0 ? "#f5f8ff" : "white" }}>
+                    <td style={{ padding:".55rem 1rem", fontWeight:700, color:"#1e73be" }}>{year}</td>
+                    <td style={{ padding:".55rem 1rem", fontWeight:600, color:"#1e3a5f" }}>{event}</td>
+                    <td style={{ padding:".55rem 1rem", color:"#555" }}>{desc}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div style={{ background:"#f0f6ff", border:"1px solid #c5d9f1", borderLeft:"4px solid #1e73be", borderRadius:"4px", padding:"1rem 1.25rem" }}>
+              <strong style={{ color:"#1e3a5f" }}>Цитата основателя:</strong>
+              <p style={{ marginTop:".4rem", fontStyle:"italic", color:"#444", lineHeight:1.65 }}>
+                «Конфиденциальность — это не роскошь, а базовое право каждого человека. Именно поэтому мы создали Telegram.»
+              </p>
+              <p style={{ marginTop:".4rem", fontSize:".8rem", color:"#888" }}>— Павел Дуров, основатель Telegram</p>
+            </div>
+          </div>
+        )}
+
+        {/* СЛАЙД 2 — ВОЗМОЖНОСТИ */}
+        {cur === 2 && (
+          <div style={{ padding:"2rem 3rem", maxWidth:"960px", margin:"0 auto" }}>
+            <h2 style={{ fontSize:"1.7rem", fontWeight:700, color:"#1e3a5f", borderBottom:"2px solid #1e73be", paddingBottom:".5rem", marginBottom:"1.5rem" }}>
+              Основные возможности Telegram
+            </h2>
+
+            <p style={{ fontSize:".95rem", color:"#333", lineHeight:1.75, marginBottom:"1.5rem" }}>
+              В отличие от обычных мессенджеров, Telegram давно вышел за рамки простой переписки. Ниже перечислены ключевые функции, которые делают его уникальным.
+            </p>
+
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1rem", marginBottom:"1.5rem" }}>
+              {[
+                { emoji:"🔒", title:"Шифрование и безопасность", text:"Секретные чаты с end-to-end шифрованием, самоуничтожение сообщений через заданное время, собственный протокол MTProto — более надёжный, чем стандартный SSL." },
+                { emoji:"📢", title:"Каналы и группы", text:"Каналы с неограниченным числом подписчиков — новый формат СМИ. Супергруппы до 200 000 участников для обсуждений, сообществ и корпоративного общения." },
+                { emoji:"🤖", title:"Боты и автоматизация", text:"Более 700 000 активных ботов: магазины, службы доставки, банки, госуслуги — всё работает внутри одного приложения без переходов на сторонние сайты." },
+                { emoji:"💰", title:"Криптовалюта и TON", text:"Встроенный кошелёк, NFT и P2P-переводы на базе блокчейна TON (The Open Network). Telegram создаёт собственную финансовую экосистему без посредников." },
+                { emoji:"🎮", title:"Мини-приложения (Web Apps)", text:"Полноценные приложения внутри Telegram без отдельной установки. Notcoin, Hamster Kombat — более 300 млн игроков. Новый рынок для разработчиков." },
+                { emoji:"☁️", title:"Облачное хранилище", text:"Файлы размером до 4 ГБ, неограниченное облачное хранилище, синхронизация на всех устройствах одновременно. Личный архив и заметки." },
+              ].map(f => (
+                <div key={f.title} style={{ background:"#f9fbff", border:"1px solid #dde8f8", borderRadius:"6px", padding:"1rem" }}>
+                  <div style={{ fontSize:"1.4rem", marginBottom:".4rem" }}>{f.emoji}</div>
+                  <div style={{ fontWeight:700, color:"#1e3a5f", marginBottom:".4rem", fontSize:".92rem" }}>{f.title}</div>
+                  <p style={{ fontSize:".8rem", color:"#555", lineHeight:1.6 }}>{f.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background:"#1e73be", color:"white", borderRadius:"6px", padding:".9rem 1.4rem", display:"flex", gap:"2rem", justifyContent:"center" }}>
+              {[["700 000+","активных ботов"],["4 ГБ","макс. размер файла"],["∞","подписчиков в канале"],["20","аккаунтов на 1 устройство"]].map(([n,l])=>(
+                <div key={l} style={{ textAlign:"center" }}>
+                  <div style={{ fontSize:"1.4rem", fontWeight:700 }}>{n}</div>
+                  <div style={{ fontSize:".7rem", opacity:.85, marginTop:".1rem" }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* СЛАЙД 3 — АУДИТОРИЯ */}
+        {cur === 3 && (
+          <div style={{ padding:"2rem 3rem", maxWidth:"960px", margin:"0 auto" }}>
+            <h2 style={{ fontSize:"1.7rem", fontWeight:700, color:"#1e3a5f", borderBottom:"2px solid #1e73be", paddingBottom:".5rem", marginBottom:"1.5rem" }}>
+              Аудитория и рост Telegram
+            </h2>
+
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"2rem" }}>
+              <div>
+                <p style={{ fontSize:".9rem", color:"#444", lineHeight:1.7, marginBottom:"1.25rem" }}>
+                  Telegram — одна из самых быстрорастущих платформ в мире. С момента запуска в 2013 году аудитория выросла в тысячи раз. Особенно резкий скачок произошёл в 2020–2021 годах на фоне пандемии и блокировок WhatsApp в ряде стран.
+                </p>
+
+                {/* Упрощённый "самодельный" график */}
+                <div style={{ marginBottom:"1.25rem" }}>
+                  <div style={{ fontSize:".78rem", fontWeight:700, color:"#888", marginBottom:".6rem" }}>Рост числа пользователей (млн):</div>
+                  {[
+                    { year:"2013", val:0.1,  pct:1 },
+                    { year:"2015", val:60,   pct:7 },
+                    { year:"2018", val:200,  pct:22 },
+                    { year:"2020", val:400,  pct:44 },
+                    { year:"2022", val:700,  pct:78 },
+                    { year:"2024", val:900,  pct:100 },
+                  ].map(d => (
+                    <div key={d.year} style={{ display:"flex", alignItems:"center", gap:".6rem", marginBottom:".4rem" }}>
+                      <div style={{ width:"36px", fontSize:".75rem", color:"#666", flexShrink:0 }}>{d.year}</div>
+                      <div style={{ flex:1, background:"#e8ecf0", borderRadius:"2px", height:"18px" }}>
+                        <div style={{ width:`${d.pct}%`, background:"#1e73be", height:"100%", borderRadius:"2px", display:"flex", alignItems:"center", paddingLeft:"6px" }}>
+                          {d.pct > 10 && <span style={{ fontSize:".65rem", color:"white", fontWeight:600 }}>{d.val >= 100 ? `${d.val/1000}B` : `${d.val}M`}</span>}
+                        </div>
+                      </div>
+                      {d.pct <= 10 && <span style={{ fontSize:".65rem", color:"#666" }}>{d.val}M</span>}
+                    </div>
+                  ))}
+                </div>
+
+                <p style={{ fontSize:".8rem", color:"#888", fontStyle:"italic" }}>* Данные приблизительные, на основе открытых источников</p>
+              </div>
+
+              <div>
+                <div style={{ fontSize:".78rem", fontWeight:700, color:"#888", marginBottom:".75rem" }}>Ключевые цифры:</div>
+                <table style={{ width:"100%", borderCollapse:"collapse", fontSize:".88rem" }}>
+                  <tbody>
+                    {[
+                      ["Активных пользователей (2024)", "900 млн+"],
+                      ["Сообщений в день",              "80 млрд"],
+                      ["Место в рейтинге скачиваний",   "Топ-5 в мире"],
+                      ["Стран с Telegram в топ-3",       "85+"],
+                      ["Зарегистрировано ботов",         "700 000+"],
+                      ["Максимальный размер файла",      "4 ГБ"],
+                      ["Лет на рынке",                   "12 лет"],
+                    ].map(([label, val], i) => (
+                      <tr key={label} style={{ background: i % 2 === 0 ? "#f5f8ff" : "white" }}>
+                        <td style={{ padding:".5rem .75rem", color:"#444" }}>{label}</td>
+                        <td style={{ padding:".5rem .75rem", fontWeight:700, color:"#1e73be", textAlign:"right" }}>{val}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* СЛАЙД 4 — ВЛИЯНИЕ */}
+        {cur === 4 && (
+          <div style={{ padding:"2rem 3rem", maxWidth:"960px", margin:"0 auto" }}>
+            <h2 style={{ fontSize:"1.7rem", fontWeight:700, color:"#1e3a5f", borderBottom:"2px solid #1e73be", paddingBottom:".5rem", marginBottom:"1.5rem" }}>
+              Влияние Telegram на общество
+            </h2>
+
+            <p style={{ fontSize:".95rem", color:"#333", lineHeight:1.75, marginBottom:"1.5rem" }}>
+              За 12 лет Telegram вышел далеко за рамки мессенджера и начал влиять на медиа, политику, бизнес и гражданское общество по всему миру.
+            </p>
+
+            <div style={{ display:"flex", flexDirection:"column", gap:"1rem", marginBottom:"1.5rem" }}>
+              {[
+                { emoji:"📰", title:"Медиа и новости", color:"#e8f0fe", border:"#c5d5f8",
+                  text:"Независимые Telegram-каналы стали полноценной альтернативой традиционным СМИ. Сегодня в Telegram более 200 000 новостных каналов на разных языках. Во время военных конфликтов и политических кризисов мессенджер нередко оказывался единственным доступным источником информации." },
+                { emoji:"🗳️", title:"Политика и активизм", color:"#fff0e8", border:"#f8d5b5",
+                  text:"В Беларуси (2020) и Иране (2022) протестные движения координировались через Telegram, когда власти отключали интернет. Анонимные каналы позволяют публиковать разоблачения без страха преследования. Правительства многих стран пытаются заблокировать мессенджер — с переменным успехом." },
+                { emoji:"🛒", title:"Бизнес и торговля", color:"#e8fee8", border:"#b5f8c5",
+                  text:"Малый и средний бизнес активно использует Telegram для продаж, поддержки и маркетинга. Рынок рекламы в Telegram-каналах оценивается более чем в 500 млн долларов в год. Онлайн-школы, инфобизнес и корпоративные коммуникации всё чаще переезжают именно сюда." },
+                { emoji:"🔐", title:"Приватность и цифровые права", color:"#f5e8fe", border:"#d5b5f8",
+                  text:"Telegram стал символом борьбы за цифровую приватность. Секретные чаты, псевдонимы, хранение данных в разных юрисдикциях — всё это привлекает пользователей, которых беспокоит слежка. Официально подтверждённых утечек данных с серверов Telegram до сих пор не было." },
+              ].map(f => (
+                <div key={f.title} style={{ background:f.color, border:`1px solid ${f.border}`, borderRadius:"6px", padding:"1rem 1.25rem", display:"flex", gap:"1rem" }}>
+                  <div style={{ fontSize:"1.6rem", flexShrink:0 }}>{f.emoji}</div>
+                  <div>
+                    <div style={{ fontWeight:700, color:"#1e3a5f", marginBottom:".35rem" }}>{f.title}</div>
+                    <p style={{ fontSize:".84rem", color:"#444", lineHeight:1.65 }}>{f.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* СЛАЙД 5 — ВЫВОДЫ */}
+        {cur === 5 && (
+          <div style={{ padding:"2rem 3rem", maxWidth:"960px", margin:"0 auto" }}>
+            <h2 style={{ fontSize:"1.7rem", fontWeight:700, color:"#1e3a5f", borderBottom:"2px solid #1e73be", paddingBottom:".5rem", marginBottom:"1.5rem" }}>
+              Выводы
+            </h2>
+
+            <p style={{ fontSize:".95rem", color:"#333", lineHeight:1.75, marginBottom:"1.5rem" }}>
+              Telegram — это не просто мессенджер. За 12 лет он превратился в полноценную экосистему, которая меняет то, как люди общаются, получают новости, ведут бизнес и управляют деньгами.
+            </p>
+
+            <div style={{ marginBottom:"1.5rem" }}>
+              <div style={{ fontWeight:700, color:"#1e3a5f", marginBottom:".75rem" }}>Основные выводы:</div>
+              <ul style={{ paddingLeft:"1.5rem", display:"flex", flexDirection:"column", gap:".6rem" }}>
+                {[
+                  "Telegram начинался как мессенджер с акцентом на безопасность, но со временем стал многофункциональной платформой.",
+                  "Рост аудитории с нуля до 900 млн за 12 лет — один из самых быстрых в истории технологий.",
+                  "Telegram влияет на политику, медиа и бизнес в десятках стран мира.",
+                  "Уникальная модель: нет рекламы в личных чатах, упор на приватность, открытый API для разработчиков.",
+                  "Будущее платформы связано с финансами (TON), мини-приложениями и интеграцией с ИИ.",
+                ].map(t => (
+                  <li key={t} style={{ fontSize:".92rem", color:"#333", lineHeight:1.6 }}>{t}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div style={{ marginBottom:"1.5rem" }}>
+              <div style={{ fontWeight:700, color:"#1e3a5f", marginBottom:".75rem" }}>Перспективы развития:</div>
+              <table style={{ width:"100%", borderCollapse:"collapse", fontSize:".88rem" }}>
+                <thead>
+                  <tr style={{ background:"#1e73be", color:"white" }}>
+                    <th style={{ padding:".55rem 1rem", textAlign:"left" }}>Направление</th>
+                    <th style={{ padding:".55rem 1rem", textAlign:"left" }}>Что ожидается</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ["Аудитория",        "Достижение отметки 1 млрд пользователей к 2025–2026 году"],
+                    ["Финансы",          "Развитие экосистемы TON, P2P-переводы, альтернатива банкам"],
+                    ["Мини-приложения",  "Новый рынок для разработчиков, аналог App Store внутри Telegram"],
+                    ["Искусственный ИИ", "Интеграция языковых моделей прямо в чаты и ботов"],
+                    ["Видеоконтент",     "Конкуренция с YouTube и TikTok в сегменте коротких видео"],
+                  ].map(([dir, exp], i) => (
+                    <tr key={dir} style={{ background: i % 2 === 0 ? "#f5f8ff" : "white" }}>
+                      <td style={{ padding:".5rem 1rem", fontWeight:600, color:"#1e3a5f" }}>{dir}</td>
+                      <td style={{ padding:".5rem 1rem", color:"#555" }}>{exp}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div style={{ background:"#1e73be", color:"white", borderRadius:"6px", padding:"1.1rem 1.5rem" }}>
+              <div style={{ fontWeight:700, fontSize:"1rem", marginBottom:".4rem" }}>✈️ &nbsp;Итог</div>
+              <p style={{ fontSize:".88rem", lineHeight:1.7, opacity:.95 }}>
+                Telegram доказал, что можно строить глобальную платформу без слежки за пользователями и навязчивой рекламы. Его развитие продолжается, и, судя по темпам роста, это далеко не предел.
               </p>
             </div>
           </div>
-        </div>
+        )}
+
       </div>
 
-      {/* ── СЛАЙД 2: ВОЗМОЖНОСТИ ── */}
-      <div className={`slide ${current === 2 ? "active" : ""}`} style={{ background:"white", padding:"2.5rem 3.5rem", overflow:"auto" }}>
-        <SlideHeader num="02" title="Ключевые возможности" accent="платформы" />
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"1rem", marginTop:"1.5rem" }}>
-          {[
-            { icon:"Lock",      color:"#8b5cf6", title:"Шифрование MTProto",   desc:"Собственный протокол безопасности. E2E в секретных чатах, самоуничтожение сообщений, никаких серверных копий" },
-            { icon:"Radio",     color:"#2AABEE", title:"Каналы и группы",       desc:"Безлимитная аудитория в каналах. Супергруппы до 200 000 участников — новый формат медиа и сообществ" },
-            { icon:"Bot",       color:"#10b981", title:"Боты и автоматизация", desc:"700 000+ активных ботов. Магазины, банки, госуслуги — всё работает внутри приложения без переходов" },
-            { icon:"Wallet",    color:"#f59e0b", title:"TON и криптовалюта",   desc:"Встроенный кошелёк, NFT, P2P переводы. Telegram строит собственную финансовую экосистему" },
-            { icon:"Gamepad2",  color:"#ef4444", title:"Мини-приложения",       desc:"Web Apps внутри Telegram. Notcoin, Hamster Kombat — 300M+ игроков без установки отдельных приложений" },
-            { icon:"HardDrive", color:"#0ea5e9", title:"Облачное хранилище",   desc:"Файлы до 4 ГБ, неограниченное облако, синхронизация на всех устройствах, личный архив сообщений" },
-          ].map(f=>(
-            <div key={f.title} className="feat-card">
-              <div style={{ display:"flex", alignItems:"center", gap:".6rem", marginBottom:".65rem" }}>
-                <div style={{ width:"36px", height:"36px", borderRadius:"8px", background:`${f.color}15`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                  <Icon name={f.icon} fallback="CircleAlert" size={18} style={{ color:f.color }} />
-                </div>
-                <span style={{ fontWeight:700, color:"#1a2535", fontSize:".85rem" }}>{f.title}</span>
-              </div>
-              <p style={{ fontSize:".76rem", color:"#667080", lineHeight:1.65 }}>{f.desc}</p>
-            </div>
-          ))}
-        </div>
-        <div style={{ display:"flex", gap:"1rem", marginTop:"1.2rem" }}>
-          {[{ n:"700K+", l:"активных ботов" },{ n:"4 ГБ", l:"макс. размер файла" },{ n:"∞", l:"подписчиков в канале" },{ n:"20", l:"аккаунтов на устройство" }].map(s=>(
-            <div key={s.l} className="stat-box" style={{ flex:1, textAlign:"center" }}>
-              <div style={{ fontSize:"1.6rem", fontWeight:800, color:"#2AABEE" }}>{s.n}</div>
-              <div style={{ fontSize:".65rem", color:"#8a9baa", marginTop:".15rem", fontWeight:500 }}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── СЛАЙД 3: СТАТИСТИКА ── */}
-      <div className={`slide ${current === 3 ? "active" : ""}`} style={{ background:"#f7f9fb", padding:"2.5rem 3.5rem", overflow:"auto" }}>
-        <SlideHeader num="03" title="Telegram в цифрах" accent="рост аудитории" />
-        <div style={{ display:"grid", gridTemplateColumns:"1.2fr 1fr", gap:"2.5rem", marginTop:"1.5rem", alignItems:"start" }}>
-          <div>
-            <div style={{ fontSize:".7rem", fontWeight:700, color:"#8a9baa", letterSpacing:".08em", marginBottom:"1rem" }}>КОЛИЧЕСТВО ПОЛЬЗОВАТЕЛЕЙ</div>
-            {/* График */}
-            <div style={{ display:"flex", gap:"10px", alignItems:"flex-end", height:"140px", marginBottom:"1.5rem" }}>
-              {[
-                { year:"2013", users:0.1, h:1 },
-                { year:"2015", users:60,  h:7 },
-                { year:"2018", users:200, h:22 },
-                { year:"2020", users:400, h:44 },
-                { year:"2022", users:700, h:78 },
-                { year:"2024", users:900, h:100 },
-              ].map(d=>(
-                <div key={d.year} className="chart-col">
-                  <span style={{ fontSize:".58rem", fontWeight:700, color:"#2AABEE" }}>{d.users>=100?`${(d.users/1000).toFixed(1)}B`:`${d.users}M`}</span>
-                  <div style={{ width:"100%", background:"#e8ecf0", borderRadius:"6px 6px 0 0", flex:1, display:"flex", alignItems:"flex-end" }}>
-                    <div className="chart-bar" style={{ height:`${d.h}%` }} />
-                  </div>
-                  <span style={{ fontSize:".58rem", color:"#8a9baa", fontWeight:600 }}>{d.year}</span>
-                </div>
-              ))}
-            </div>
-            {[
-              { label:"Сообщений отправляется в день", val:80, unit:"млрд" },
-              { label:"Стран, где Telegram в топ-3", val:85, unit:"%" },
-              { label:"Пользователей читают каналы", val:72, unit:"%" },
-            ].map(b=>(
-              <div key={b.label} style={{ marginBottom:".7rem" }}>
-                <div style={{ display:"flex", justifyContent:"space-between", fontSize:".73rem", color:"#556070", marginBottom:".3rem", fontWeight:500 }}>
-                  <span>{b.label}</span>
-                  <span style={{ fontWeight:700, color:"#2AABEE" }}>{b.val} {b.unit}</span>
-                </div>
-                <div className="bar-bg"><div className="bar-fill" style={{ width:`${b.val}%` }} /></div>
-              </div>
-            ))}
-          </div>
-          <div style={{ display:"flex", flexDirection:"column", gap:".85rem" }}>
-            {[
-              { n:"900M+", lbl:"активных пользователей в 2024 году",    color:"#2AABEE" },
-              { n:"80 млрд", lbl:"сообщений отправляется каждый день",  color:"#8b5cf6" },
-              { n:"#4",      lbl:"самое скачиваемое приложение в мире", color:"#10b981" },
-              { n:"12 лет",  lbl:"на рынке — с 2013 года по сей день",  color:"#f59e0b" },
-            ].map(s=>(
-              <div key={s.lbl} className="stat-box" style={{ borderLeftColor:s.color }}>
-                <div style={{ fontSize:"1.65rem", fontWeight:800, color:s.color, lineHeight:1 }}>{s.n}</div>
-                <div style={{ fontSize:".75rem", color:"#667080", marginTop:".3rem", lineHeight:1.45 }}>{s.lbl}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── СЛАЙД 4: ВЛИЯНИЕ ── */}
-      <div className={`slide ${current === 4 ? "active" : ""}`} style={{ background:"white", padding:"2.5rem 3.5rem", overflow:"auto" }}>
-        <SlideHeader num="04" title="Влияние Telegram" accent="на общество" />
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:"1.1rem", marginTop:"1.5rem" }}>
-          {[
-            { icon:"Newspaper", color:"#2AABEE", title:"Медиа и журналистика",
-              points:["Независимые каналы как альтернатива ТВ и газетам","Новости без редакционной цензуры и фильтров","Во время войн и кризисов — главный источник информации","200+ тысяч новостных каналов по всему миру"] },
-            { icon:"Users", color:"#8b5cf6", title:"Политика и гражданское общество",
-              points:["Протесты в Беларуси и Иране координировались через Telegram","Анонимные каналы публикуют разоблачения властей","Правительства блокируют — граждане обходят через VPN","Инструмент гражданского активизма и самоорганизации"] },
-            { icon:"ShoppingBag", color:"#10b981", title:"Бизнес и торговля",
-              points:["Магазины, доставка и сервисы работают через ботов","Рынок Telegram-рекламы — более $500 млн в год","Инфобизнес и онлайн-образование переехали в каналы","B2B коммуникация всё чаще заменяет электронную почту"] },
-            { icon:"Shield", color:"#f59e0b", title:"Приватность и безопасность",
-              points:["Секретные чаты с E2E шифрованием и самоуничтожением","Регистрация без привязки к реальному имени — псевдонимы","Серверы в нескольких юрисдикциях — сложнее заблокировать","Ни одного официально подтверждённого случая утечки данных"] },
-          ].map(card=>(
-            <div key={card.title} className="feat-card" style={{ boxShadow:"0 2px 12px rgba(0,0,0,.07)" }}>
-              <div style={{ display:"flex", alignItems:"center", gap:".75rem", marginBottom:".85rem" }}>
-                <div style={{ width:"38px", height:"38px", borderRadius:"9px", background:`${card.color}12`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                  <Icon name={card.icon} fallback="CircleAlert" size={18} style={{ color:card.color }} />
-                </div>
-                <span style={{ fontWeight:700, color:"#1a2535", fontSize:".9rem" }}>{card.title}</span>
-              </div>
-              {card.points.map(p=>(
-                <div key={p} style={{ display:"flex", gap:".5rem", alignItems:"flex-start", marginBottom:".4rem" }}>
-                  <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:card.color, marginTop:"6px", flexShrink:0 }} />
-                  <span style={{ fontSize:".77rem", color:"#556070", lineHeight:1.55 }}>{p}</span>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        <div style={{ marginTop:"1.1rem", background:"#f0f7ff", borderRadius:"10px", padding:"1rem 1.4rem", borderLeft:"4px solid #2AABEE" }}>
-          <p style={{ fontStyle:"italic", color:"#445060", fontSize:".85rem", lineHeight:1.75 }}>
-            💬 &nbsp;Во время иранских протестов 2022 года Telegram был единственным каналом связи для миллионов людей, когда власти отключили интернет.
-          </p>
-        </div>
-      </div>
-
-      {/* ── СЛАЙД 5: БУДУЩЕЕ ── */}
-      <div className={`slide ${current === 5 ? "active" : ""}`} style={{ background:"#f7f9fb", padding:"2.5rem 3.5rem", overflow:"auto" }}>
-        <SlideHeader num="05" title="Будущее Telegram" accent="что дальше?" />
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"1rem", marginTop:"1.5rem" }}>
-          {[
-            { icon:"Sparkles", color:"#8b5cf6", title:"Супер-приложение",      desc:"По модели WeChat — внутри Telegram живут банки, магазины, игры, госуслуги. К 2026 — полноценная экосистема для жизни" },
-            { icon:"Coins",    color:"#f59e0b", title:"Финансы и TON",         desc:"Блокчейн The Open Network, P2P переводы без банков. Telegram строит альтернативную финансовую систему" },
-            { icon:"Brain",    color:"#2AABEE", title:"Интеграция с ИИ",      desc:"Языковые модели прямо в ботах и чатах. Персональный ИИ-ассистент для каждого пользователя уже в разработке" },
-            { icon:"Globe",    color:"#10b981", title:"1 млрд пользователей", desc:"Прогнозируемый рубеж — 1 миллиард. Telegram войдёт в клуб самых массовых цифровых платформ планеты" },
-            { icon:"Tv",       color:"#ef4444", title:"Видео и стриминг",     desc:"Stories, прямые эфиры, видеосообщения. Telegram наступает на YouTube и TikTok в сегменте короткого видео" },
-            { icon:"Building", color:"#0ea5e9", title:"Корпоративный рынок", desc:"CRM, аналитика каналов, рекламный кабинет для бизнеса. Корпоративный сегмент растёт на 40% в год" },
-          ].map(f=>(
-            <div key={f.title} className="feat-card">
-              <div style={{ display:"flex", alignItems:"center", gap:".6rem", marginBottom:".65rem" }}>
-                <div style={{ width:"36px", height:"36px", borderRadius:"8px", background:`${f.color}14`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-                  <Icon name={f.icon} fallback="CircleAlert" size={18} style={{ color:f.color }} />
-                </div>
-                <span style={{ fontWeight:700, color:"#1a2535", fontSize:".85rem" }}>{f.title}</span>
-              </div>
-              <p style={{ fontSize:".76rem", color:"#667080", lineHeight:1.65 }}>{f.desc}</p>
-            </div>
-          ))}
-        </div>
-        <div style={{ marginTop:"1.2rem", background:"#2AABEE", borderRadius:"12px", padding:"1.2rem 1.8rem", display:"flex", alignItems:"center", gap:"1rem" }}>
-          <span style={{ fontSize:"2rem" }}>✈️</span>
-          <div>
-            <div style={{ fontWeight:800, color:"white", fontSize:"1rem", marginBottom:".25rem" }}>Telegram — это уже не мессенджер</div>
-            <div style={{ color:"rgba(255,255,255,.85)", fontSize:".82rem", lineHeight:1.6 }}>Это платформа, которая переопределяет то, как мы общаемся, ведём бизнес, потребляем новости и управляем деньгами.</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Навигация */}
-      <div className="nav-wrap">
-        <button className="nbtn" onClick={()=>goTo(current-1)} disabled={current===0}>
-          <Icon name="ChevronLeft" size={15} />
+      {/* Нижняя навигация */}
+      <div style={{ background:"#f0f2f5", borderTop:"1px solid #dde3ea", padding:".6rem 1.5rem", display:"flex", justifyContent:"space-between", alignItems:"center", flexShrink:0 }}>
+        <button onClick={() => setCur(c => Math.max(c - 1, 0))} disabled={cur === 0}
+          style={{ padding:".4rem 1.2rem", background: cur === 0 ? "#e0e4ea" : "#1e73be", color: cur === 0 ? "#aaa" : "white", border:"none", borderRadius:"4px", cursor: cur === 0 ? "not-allowed" : "pointer", fontFamily:"Calibri, Arial, sans-serif", fontSize:".85rem", fontWeight:600 }}>
+          ← Назад
         </button>
-        <div style={{ display:"flex", gap:"5px", alignItems:"center" }}>
-          {SLIDES.map(s=><button key={s.id} className={`ndot${current===s.id?" on":""}`} onClick={()=>goTo(s.id)} />)}
+        <div style={{ display:"flex", gap:"6px" }}>
+          {SLIDES.map((_, i) => (
+            <div key={i} onClick={() => setCur(i)} style={{ width: cur === i ? "22px" : "8px", height:"8px", borderRadius:"4px", background: cur === i ? "#1e73be" : "#bfc8d4", cursor:"pointer", transition:"width .2s" }} />
+          ))}
         </div>
-        <button className="nbtn" onClick={()=>goTo(current+1)} disabled={current===SLIDES.length-1}>
-          <Icon name="ChevronRight" size={15} />
+        <button onClick={() => setCur(c => Math.min(c + 1, SLIDES.length - 1))} disabled={cur === SLIDES.length - 1}
+          style={{ padding:".4rem 1.2rem", background: cur === SLIDES.length - 1 ? "#e0e4ea" : "#1e73be", color: cur === SLIDES.length - 1 ? "#aaa" : "white", border:"none", borderRadius:"4px", cursor: cur === SLIDES.length - 1 ? "not-allowed" : "pointer", fontFamily:"Calibri, Arial, sans-serif", fontSize:".85rem", fontWeight:600 }}>
+          Вперёд →
         </button>
       </div>
 
-      <div className="slide-num">{current+1} / {SLIDES.length}</div>
-    </div>
-  );
-}
-
-function SlideHeader({ num, title, accent }: { num: string; title: string; accent: string }) {
-  return (
-    <div style={{ borderBottom:"2px solid #eaedf0", paddingBottom:"1rem" }}>
-      <div style={{ fontSize:".62rem", fontWeight:700, color:"#2AABEE", letterSpacing:".12em", marginBottom:".35rem" }}>СЛАЙД {num}</div>
-      <h2 style={{ fontSize:"clamp(1.4rem,2.8vw,2rem)", fontWeight:800, color:"#1a2535", lineHeight:1.2 }}>
-        {title} <span style={{ color:"#2AABEE" }}>{accent}</span>
-      </h2>
     </div>
   );
 }
